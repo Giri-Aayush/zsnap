@@ -4,6 +4,12 @@ All notable changes to zsnap are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project uses
 [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Architecture doc: a data-flow diagram of the export/import pipeline and ADR-001 recording
+  the trust-model decision. See [docs/architecture.md](docs/architecture.md).
+
 ## [0.1.0] - 2026-07-15
 
 First prototype milestone (Phase 0): a testnet-validated design, a working export/import
@@ -37,4 +43,5 @@ implementation on a Zebra fork, and a measured benchmark.
 - Builds on the problem framing and the `.zsnap` name from a prior, declined Zcash Community
   Grants proposal, credited in the README.
 
+[Unreleased]: https://github.com/Giri-Aayush/zsnap/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/Giri-Aayush/zsnap/releases/tag/v0.1.0
