@@ -17,6 +17,10 @@ All notable changes to zsnap are documented here. The format is based on
   attack-surface-to-mitigation table, and the honest residual-trust statement.
 - Demo storyboard now covers both the speed reveal and a live "reject a tampered snapshot"
   segment.
+- Distribution and hosting design ([docs/distribution.md](docs/distribution.md), ADR-002):
+  R2 zero-egress origin, Solana-style incremental snapshots, and an Erigon-style BitTorrent
+  swarm with a webseed. Includes cost math (about $4/month storage, $0 egress vs ~$2,340/mo
+  S3 egress for the same load). This answers the hosting objection that closed #187.
 
 ## [0.1.0] - 2026-07-15
 

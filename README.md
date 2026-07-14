@@ -84,6 +84,7 @@ Ticked as we land them.
 
 ```
 docs/architecture.md         Data-flow diagram and the trust-model ADR
+docs/distribution.md         Hosting/bandwidth answer (R2 + incremental + BitTorrent), ADR-002
 docs/security.md             Threat model of the import path
 docs/snapshot-format.md      The .zsnap wire format and verification chain
 docs/demo.md                 Storyboard for the side-by-side demo
@@ -117,9 +118,11 @@ discussion:
   two nodes at the same height produce an identical manifest hash - verified in practice.
 - **Checkpoint-based trust** (suggested by `conradoplg`): this is exactly zsnap's model.
 
-Open problem we do not claim to have solved: hosting and bandwidth for a ~260 GB mainnet
-snapshot. A snapshot download is roughly the same size as syncing; the win is skipping the
-CPU-bound replay, not the bytes.
+On hosting and bandwidth for a ~260 GB mainnet snapshot (the objection that sank #187): a
+snapshot download is roughly the same size as syncing, and the win is skipping the CPU-bound
+replay, not the bytes. There is now a designed answer, not yet built: an R2 zero-egress
+origin, incremental snapshots, and a BitTorrent swarm. See
+[docs/distribution.md](docs/distribution.md).
 
 ## License
 
