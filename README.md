@@ -84,6 +84,7 @@ Ticked as we land them.
 
 ```
 docs/architecture.md         Data-flow diagram and the trust-model ADR
+docs/security.md             Threat model of the import path
 docs/snapshot-format.md      The .zsnap wire format and verification chain
 docs/demo.md                 Storyboard for the side-by-side demo
 benchmarks/testnet-268k.md   Measured head-to-head results

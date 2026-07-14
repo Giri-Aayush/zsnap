@@ -13,6 +13,10 @@ All notable changes to zsnap are documented here. The format is based on
   ([benchmarks/robustness.md](benchmarks/robustness.md)): export/import scaling at heights
   268k and 1,000,800, round-trip determinism, and five edge-case rejections (wrong hash,
   existing DB, network mismatch, tampered chunk, truncated chunk), all passing.
+- Threat model of the import path ([docs/security.md](docs/security.md)): trust boundary,
+  attack-surface-to-mitigation table, and the honest residual-trust statement.
+- Demo storyboard now covers both the speed reveal and a live "reject a tampered snapshot"
+  segment.
 
 ## [0.1.0] - 2026-07-15
 
