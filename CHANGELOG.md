@@ -9,6 +9,10 @@ All notable changes to zsnap are documented here. The format is based on
 ### Added
 - Architecture doc: a data-flow diagram of the export/import pipeline and ADR-001 recording
   the trust-model decision. See [docs/architecture.md](docs/architecture.md).
+- Reproducible benchmark + robustness runner ([demo/bench.sh](demo/bench.sh)) and results
+  ([benchmarks/robustness.md](benchmarks/robustness.md)): export/import scaling at heights
+  268k and 1,000,800, round-trip determinism, and five edge-case rejections (wrong hash,
+  existing DB, network mismatch, tampered chunk, truncated chunk), all passing.
 
 ## [0.1.0] - 2026-07-15
 

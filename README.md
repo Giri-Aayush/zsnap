@@ -87,6 +87,8 @@ docs/architecture.md         Data-flow diagram and the trust-model ADR
 docs/snapshot-format.md      The .zsnap wire format and verification chain
 docs/demo.md                 Storyboard for the side-by-side demo
 benchmarks/testnet-268k.md   Measured head-to-head results
+benchmarks/robustness.md     Robustness matrix and export/import scaling
+demo/bench.sh                Reproducible benchmark + robustness runner
 ```
 
 The Zebra implementation itself lives on a fork and is not vendored here yet.
