@@ -1,4 +1,4 @@
-# Demo storyboard — "fresh Zcash node in seconds, not days"
+# Demo storyboard - "fresh Zcash node in seconds, not days"
 
 The hero artifact: a side-by-side showing a snapshot-synced node reach a usable state in
 seconds while a from-genesis node is still grinding. Target length: 60–90 seconds.
@@ -6,8 +6,8 @@ seconds while a from-genesis node is still grinding. Target length: 60–90 seco
 ## Setup
 
 - Two terminals side by side (or a split pane).
-- **Left:** the baseline — `zebrad start` on an empty cache, syncing from genesis.
-- **Right:** the zsnap path — import a snapshot, then `zebrad start`.
+- **Left:** the baseline - `zebrad start` on an empty cache, syncing from genesis.
+- **Right:** the zsnap path - import a snapshot, then `zebrad start`.
 - A running clock overlay, so the contrast is unmissable.
 
 ## Beats
@@ -37,7 +37,7 @@ seconds while a from-genesis node is still grinding. Target length: 60–90 seco
 
 ## Capture notes
 
-- Record real terminals — no fake timings. The numbers hold up (see `benchmarks/`).
+- Record real terminals - no fake timings. The numbers hold up (see `benchmarks/`).
 - Use a release build for the final cut so the import is even snappier.
 - Keep raw captures out of git (large); commit only the final encoded video.
 - Tooling: `zecd-remotion` is available for the polished side-by-side + overlays.

@@ -1,4 +1,4 @@
-# Benchmark — testnet @ height 268,000
+# Benchmark - testnet @ height 268,000
 
 End-to-end run on 2026-07-15. Apple M3 Pro (11 cores, 18 GB RAM), Zebra fork debug build.
 Testnet state exported from a live syncing node, imported into a fresh node, then
@@ -11,7 +11,7 @@ tail-synced past the snapshot tip.
 | **Export** (read-only secondary, live node) | 4,229,099 records / 710 MB @ height 268,000 | ~8 s |
 | **Import** (fresh DB, `--expect-hash` authenticated) | all 30 column families, tip hash identical | ~7 s |
 | **Tail-sync** (node booted on imported DB) | resumed at 268,000, committed 2,400+ blocks | continuous |
-| **Consensus errors** | none | — |
+| **Consensus errors** | none | - |
 
 Snapshot manifest hash: `570b6721c0b9e15334d1d6fc50edb4d26ee083122d6bc197accebf91f12f1d25`
 
@@ -33,7 +33,7 @@ Snapshot manifest hash: `570b6721c0b9e15334d1d6fc50edb4d26ee083122d6bc197accebf9
 
 ## Context
 
-A from-genesis sync replays every block sequentially to rebuild this state — minutes-to-hours
+A from-genesis sync replays every block sequentially to rebuild this state - minutes-to-hours
 on testnet, days on mainnet. The snapshot path reconstructed the same state in ~15 s of
 export+import, then resumed normal sync. Mainnet figures land in a later milestone.
 

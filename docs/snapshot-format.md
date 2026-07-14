@@ -2,7 +2,7 @@
 
 A zsnap snapshot is a directory. It contains a JSON manifest and one chunk file per
 Zebra state column family. The format is intentionally simple: raw key–value bytes in
-RocksDB sorted order, framed and hashed. No re-serialization — chunk contents are the
+RocksDB sorted order, framed and hashed. No re-serialization - chunk contents are the
 column family's on-disk values verbatim, so export/import is format-agnostic byte copying.
 
 ```
@@ -25,7 +25,7 @@ magic:   "ZSNAPv1\n"                        (8 bytes)
 record:  [u32-le key_len][key][u32-le value_len][value]     (repeated)
 ```
 
-- Keys and values are the raw RocksDB bytes for that column family — opaque blobs in
+- Keys and values are the raw RocksDB bytes for that column family - opaque blobs in
   Zebra's `IntoDisk`/`FromDisk` encoding. zsnap does not interpret them.
 - Sorted key order makes the byte stream **deterministic**: two nodes at the same height
   produce identical chunk bytes, hence identical hashes.
@@ -55,7 +55,7 @@ record:  [u32-le key_len][key][u32-le value_len][value]     (repeated)
 | Field | Meaning |
 |---|---|
 | `snapshot_format` | Layout/framing version (currently `1`). |
-| `db_format_version` | Zebra's on-disk state format the chunks were produced by (e.g. `28.0.0`). An importer refuses an incompatible major version — values are not self-describing. |
+| `db_format_version` | Zebra's on-disk state format the chunks were produced by (e.g. `28.0.0`). An importer refuses an incompatible major version - values are not self-describing. |
 | `network` | `Mainnet` or `Testnet`. |
 | `tip_height` / `tip_hash` | The finalized tip captured by the snapshot. |
 | `chunks[]` | One entry per column family: name, relative path, record count, byte size, and a **BLAKE2b-256** hash of the chunk file. |
@@ -72,11 +72,11 @@ zsnap says so loudly.
 
 ## Verification chain
 
-1. **Manifest hash** — the manifest bytes hash to the trusted `--expect-hash` value.
-2. **Chunk hashes** — every chunk file hashes to its `blake2b256` entry in the manifest.
-3. **Consensus (shielded state)** — the imported history tree and note commitment trees
+1. **Manifest hash** - the manifest bytes hash to the trusted `--expect-hash` value.
+2. **Chunk hashes** - every chunk file hashes to its `blake2b256` entry in the manifest.
+3. **Consensus (shielded state)** - the imported history tree and note commitment trees
    are verified against the tip block header's `hashBlockCommitments` the moment the first
    post-snapshot block is committed. Forged shielded state can't survive tail-sync.
 
 Steps 1–2 are the checkpoint trust model (same as Zebra's hardcoded block hashes).
-Step 3 is trustless — it rides on consensus.
+Step 3 is trustless - it rides on consensus.
