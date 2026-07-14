@@ -120,9 +120,9 @@ discussion:
 
 On hosting and bandwidth for a ~260 GB mainnet snapshot (the objection that sank #187): a
 snapshot download is roughly the same size as syncing, and the win is skipping the CPU-bound
-replay, not the bytes. There is now a designed answer, not yet built: an R2 zero-egress
-origin, incremental snapshots, and a BitTorrent swarm. See
-[docs/distribution.md](docs/distribution.md).
+replay, not the bytes. There is now a designed answer, not yet built: a Storj origin (already
+proven in the ecosystem by zecrocks), incremental snapshots, and a BitTorrent swarm, with
+bandwidth donated in-kind by seeders. See [docs/distribution.md](docs/distribution.md).
 
 ## License
 
