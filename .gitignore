@@ -1,0 +1,6 @@
+# Private working docs — not for publication
+info/
+
+# OS / editor cruft
+.DS_Store
+*.swp
