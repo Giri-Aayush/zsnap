@@ -36,12 +36,11 @@ Two important honesty notes:
 - Re-exporting a live, still-syncing node twice gives two different hashes, because the tip
   advanced between exports. That is two different states, as expected. To reproduce a
   published hash, pin the height.
-- Across two *independently built* nodes at the same height, the consensus-critical column
-  families are byte-identical, but the non-consensus `block_info` metadata can differ, so the
-  full manifest hash is not yet a canonical fingerprint of consensus state. This was found by
-  a differential test against a from-genesis sync and is documented, with the fix, in
-  [differential-75600.md](differential-75600.md). Until that fix lands, "reproducible hash"
-  means per-database, not across independent syncs.
+- Across two *independently built* nodes at the same height, the canonical hash (format 2,
+  which excludes the non-consensus `block_info` metadata) is identical. This was found and
+  fixed via a from-genesis differential test, with the two nodes confirmed to produce the
+  same canonical hash: [differential-75600.md](differential-75600.md). So "reproducible hash"
+  now holds across independent syncs, not just per-database.
 
 ## Robustness / edge cases
 

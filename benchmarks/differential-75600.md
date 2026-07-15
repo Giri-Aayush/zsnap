@@ -37,35 +37,37 @@ is partly backfilled by a format upgrade), while the genesis node computed it li
 block. Those routes serialized some early-block entries differently, even though
 `tip_chain_value_pool` (the same `ValueBalance` type, current total) matches exactly.
 
-## The honest consequence
+## The consequence, and the fix (implemented)
 
-This falsifies a claim we previously made: that two nodes at the same height always produce
-an identical manifest hash. Corrected statement:
+This first falsified a claim we had made: that two nodes at the same height always produce an
+identical manifest hash. That was true for a fixed database but not across two independently
+built nodes, because the old hash covered `block_info`.
 
-- Export is deterministic for a **fixed database** (proven by the round-trip and by 6 repeated
-  exports hashing to one value).
-- Across **two independently-built nodes**, the consensus-critical state is byte-identical,
-  but `block_info` metadata can differ, so the manifest hash as currently defined is **not**
-  a canonical fingerprint of consensus state.
+**Fixed in snapshot format 2.** The snapshot's identity is now a *canonical hash* over the
+consensus-critical column families only, excluding `block_info` (and any other non-consensus,
+block-derived metadata listed in `NON_CONSENSUS_COLUMN_FAMILIES`). `block_info` is still
+exported, imported, and per-chunk hash-verified; it just no longer defines the snapshot's
+identity, because it is reconstructable from the blocks and not consensus-critical.
 
-This matters for the N-of-M attestation model: two honest operators syncing independently
-could produce different manifest hashes today, so they could not co-sign the same hash.
+**Confirmed empirically.** Re-running this exact test with the format-2 binary, the two
+independently-built nodes at height 75,600 now produce the **identical canonical hash**:
 
-## The fix (next work, changes the hash)
+```
+genesis-only sync  @75600: c0f8c1d07218776c438aae0411b2120196d965c4c3719fd1f1bf1ecb7854463c
+snapshot-bootstrap @75600: c0f8c1d07218776c438aae0411b2120196d965c4c3719fd1f1bf1ecb7854463c
+```
 
-The canonical hash should cover only consensus-critical, deterministically-reproducible state.
-The clean options:
+The per-column-family diff still shows `block_info` differing (that data genuinely differs
+by build route), but it no longer changes the identity hash. So:
 
-1. **Exclude `block_info`** (and any other non-consensus, block-derived metadata) from the
-   canonical manifest hash. It is reconstructable from the blocks, so it need not be part of
-   the fingerprint. Ship it in the archive but hash it outside the canonical digest, or
-   recompute it on import.
-2. Or **canonicalize** how `block_info` is produced so both routes agree.
+- Export is deterministic for a fixed database.
+- Two independently-built nodes at the same height now produce the same canonical hash.
+- The N-of-M attestation model converges: honest operators syncing independently can co-sign
+  the same hash. This was the blocking prerequisite, and it now holds.
 
-Option 1 is simpler and makes the hash a true consensus-state fingerprint, which is what the
-attestation and embedded-checkpoint model actually want. Implementing it changes the manifest
-hash (the current embedded testnet value would be regenerated), so it is a deliberate format
-revision, not a silent change.
+The change bumped the snapshot format to 2 and regenerated the embedded testnet hash, a
+deliberate revision. A unit test (`canonical_hash_ignores_non_consensus_metadata`) locks in
+that `block_info` cannot affect the hash while a consensus column family still does.
 
 ## Reproduce
 

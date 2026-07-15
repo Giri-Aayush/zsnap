@@ -22,16 +22,21 @@ All notable changes to zsnap are documented here. The format is based on
   raising a Python traceback. All three fixes came from a confirmatory adversarial review.
 
 ### Changed
-- Corrected an over-stated determinism claim. A differential test against a from-genesis sync
-  ([benchmarks/differential-75600.md](benchmarks/differential-75600.md)) proved that a
-  snapshot-bootstrapped node and a pure from-genesis node at the same height agree byte-for-byte
-  on all 28 consensus-critical column families (UTXO set, all nullifier sets, note-commitment
-  and history trees, value pools, indexes), but differ in the one non-consensus metadata column
-  family `block_info`. So export is deterministic per database, and consensus state is
-  reproduced exactly, but the full manifest hash is not yet a canonical fingerprint across
-  independently-built nodes. Docs and the attestation model are updated to say so; the fix
-  (exclude `block_info` from the canonical hash) is the next work and will change the hash.
-- Added `demo/differential.sh` to run this check, and fixed its output-capture bug.
+- Snapshot format 2: the snapshot's identity is now a **canonical hash** over the
+  consensus-critical column families only, excluding non-consensus block-derived metadata
+  (`block_info`). This was driven by a differential test against a from-genesis sync
+  ([benchmarks/differential-75600.md](benchmarks/differential-75600.md)): a
+  snapshot-bootstrapped node and a pure from-genesis node at the same height agree
+  byte-for-byte on all 28 consensus-critical column families (UTXO set, all nullifier sets,
+  note-commitment and history trees, value pools, indexes) but differ in `block_info`. Under
+  format 1 that made the two nodes' hashes differ; under format 2 they produce the identical
+  canonical hash (`c0f8c1d0...` at height 75,600), confirmed empirically, so the N-of-M
+  attestation model now converges across independent operators. The canonical text is mirrored
+  in `attestations/verify.sh` (Python) and matches the Rust exactly. The embedded testnet hash
+  and the seed attestation were regenerated; a unit test locks in that `block_info` cannot
+  affect the hash while a consensus column family still does.
+- Added `demo/differential.sh` (per-CF comparison of two independently-built caches) and fixed
+  its output-capture bug.
 
 ### Added
 - Brutal, reproducible benchmark ([demo/bench-brutal.sh](demo/bench-brutal.sh),

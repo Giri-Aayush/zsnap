@@ -11,13 +11,13 @@ have, and it is the thing the existing unverified snapshot tarballs cannot offer
 
 ## How it works
 
-1. Export is deterministic for a fixed database. IMPORTANT: a differential test against a
-   from-genesis sync ([../benchmarks/differential-75600.md](../benchmarks/differential-75600.md))
-   found that two *independently built* nodes at the same height agree on all consensus state
-   but can differ in the non-consensus `block_info` metadata, so they may currently produce
-   different manifest hashes. Until `block_info` is excluded from the canonical hash, this
-   attestation model does not yet converge across independent operators. This is the blocking
-   prerequisite for cross-operator attestations.
+1. Export is deterministic, and the canonical hash (format 2) converges across independent
+   operators. A differential test against a from-genesis sync
+   ([../benchmarks/differential-75600.md](../benchmarks/differential-75600.md)) confirmed that
+   two independently-built nodes at the same height produce the identical canonical hash
+   (`block_info` and other non-consensus metadata are excluded from it). This is what makes
+   cross-operator attestations meaningful: honest operators who reproduce the height will
+   compute the same hash and can co-sign it.
 2. Each attester runs the reproduce command in the attestation file against their own synced
    state and confirms the printed `manifest hash` equals the file's `canonical_manifest_hash`.
 3. They add an `[[attestation]]` row, ideally with a detached signature over the hash.

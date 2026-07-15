@@ -27,11 +27,11 @@ record:  [u32-le key_len][key][u32-le value_len][value]     (repeated)
 
 - Keys and values are the raw RocksDB bytes for that column family - opaque blobs in
   Zebra's `IntoDisk`/`FromDisk` encoding. zsnap does not interpret them.
-- Sorted key order makes each chunk's byte stream **deterministic for a fixed database**:
-  re-exporting the same state reproduces the same hash. Across two *independently built*
-  nodes at the same height, the consensus-critical column families are byte-identical, but
-  the non-consensus `block_info` metadata can differ, so the manifest hash is not yet a fully
-  canonical fingerprint of consensus state. See
+- Sorted key order makes each chunk's byte stream **deterministic for a fixed database**. The
+  snapshot's identity is the *canonical hash* (format 2), computed over the consensus-critical
+  column families only, so two *independently built* nodes at the same height produce the same
+  canonical hash even though the non-consensus `block_info` metadata differs by build route.
+  Proven by a from-genesis differential:
   [benchmarks/differential-75600.md](../benchmarks/differential-75600.md).
 - Sanity bounds on read: `key_len ≤ 16 MiB`, `value_len ≤ 256 MiB`.
 
@@ -64,12 +64,17 @@ record:  [u32-le key_len][key][u32-le value_len][value]     (repeated)
 | `tip_height` / `tip_hash` | The finalized tip captured by the snapshot. |
 | `chunks[]` | One entry per column family: name, relative path, record count, byte size, and a **BLAKE2b-256** hash of the chunk file. |
 
-## The snapshot hash
+## The snapshot hash (canonical hash, format 2)
 
-The published identity of a snapshot is the **BLAKE2b-256 hash of the exact
-`MANIFEST.json` bytes** (personalization `ZebraSnapshotV1`). Because the manifest
-contains the hash of every chunk, verifying the one manifest hash transitively verifies
-the entire snapshot.
+The published identity of a snapshot is its **canonical hash**: a BLAKE2b-256
+(personalization `ZebraSnapshotV1`) over a fixed, language-agnostic text of the identity
+fields (network, tip height, tip hash, db format version, snapshot format) plus the per-chunk
+hashes of the **consensus-critical** column families only, sorted by name. Non-consensus,
+block-derived metadata (`block_info`, listed in `NON_CONSENSUS_COLUMN_FAMILIES`) is excluded,
+so two independently-built nodes at the same height produce the same canonical hash. Because
+each consensus chunk's own hash is included, verifying the canonical hash transitively
+verifies all consensus state. The exact text is mirrored by `attestations/verify.sh`, so an
+independent tool reproduces the identical value.
 
 Importers pass it as `--expect-hash <hex>`. If omitted, zsnap uses the hash embedded in the
 binary for the snapshot's network and height (like a block checkpoint). If there is no
