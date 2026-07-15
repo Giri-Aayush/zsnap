@@ -55,10 +55,29 @@ cp hash.txt.sig attestations/sigs/<network>-<height>.<you>.sig
 ./attestations/verify.sh attestations/<network>-<height>.toml ./snap
 ```
 
-A hash is eligible to be blessed only once `verify.sh` reports at least `threshold` distinct
-signing **keys** agreeing (it counts keys, not names, so one party cannot pad the count with
-aliases). `verify.sh` proves N distinct valid signatures over the canonical hash in the fixed
-`zsnap-attestation` namespace; a human reviewer still confirms those keys belong to
-independent, known operators before the hash is added to the in-tree list. Exit codes: `0`
-threshold met, `2` valid but below threshold (so it fails closed when used as a gate), `1` a
-mismatch or broken signature.
+## Independence and blessing
+
+Minting ssh keys is free, so counting distinct keys alone cannot prove that N *independent*
+operators signed. Blessing therefore requires a trusted **known-signers allowlist**, passed
+out of band (not from the attacker-editable attestation file):
+
+```
+./attestations/verify.sh attestations/<network>-<height>.toml ./snap \
+  --known-signers path/to/known-operators.txt
+```
+
+The allowlist has one `identity keytype keydata` line per known operator (a reviewed file,
+for example checked into the repo alongside the trusted-hash list). Only signatures whose key
+is on the allowlist count toward `threshold`, so a single party generating extra keypairs
+cannot reach a blessable result.
+
+Exit codes:
+
+- `0` threshold met by distinct allowlisted operators, all signatures valid, hash matches.
+- `2` valid so far but not blessable: below threshold, or run without a `--known-signers`
+  allowlist (so independence is unverified). Fails closed when used as a gate.
+- `1` a mismatch, a broken signature, or a malformed attestation file.
+
+`verify.sh` proves N distinct valid signatures in the fixed `zsnap-attestation` namespace;
+the allowlist is what turns that into an independence claim, and it is still a human decision
+which keys belong on it.

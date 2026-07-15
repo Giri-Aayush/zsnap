@@ -13,10 +13,13 @@ All notable changes to zsnap are documented here. The format is based on
   height. It now errors unless `--allow-unverified` is explicitly passed. Fixed on both the
   import and download paths, with a checked total-size sum to reject an overflowing manifest.
 - Hardened the attestation verifier (`attestations/verify.sh`): the signature namespace is
-  fixed in the verifier instead of read from the attacker-editable file (domain separation),
-  the threshold counts distinct signing keys rather than attester names (Sybil resistance), a
+  fixed in the verifier instead of read from the attacker-editable file (domain separation), a
   claimed-but-broken signature is a hard failure, and "below threshold" exits non-zero so the
-  verifier fails closed when used as a gate.
+  verifier fails closed when used as a gate. Blessing (exit 0) now requires a trusted
+  `--known-signers` allowlist: only signatures from listed operators count toward the
+  threshold, so a single party cannot reach a blessable result by minting extra keypairs.
+  Malformed attestation files (missing or non-string canonical hash) fail cleanly instead of
+  raising a Python traceback. All three fixes came from a confirmatory adversarial review.
 
 ### Added
 - In-tree checkpoint-style trusted-hash anchor (on the fork): trusted manifest hashes are
