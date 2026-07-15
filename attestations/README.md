@@ -30,12 +30,30 @@ tail-sync. Attestations exist so no single publisher has to be trusted for the h
 - `verify.sh` checks that every attestation in a file agrees on the canonical hash, reports
   whether the threshold is met, and (optionally) recomputes the hash from a local snapshot.
 
+## Signatures
+
+Attestations are signed with OpenSSH detached signatures (`ssh-keygen -Y`), namespace
+`zsnap-attestation`, over the raw canonical hash string. Only the public key and the
+signature live in the repo; the private key never does. `verify.sh` reconstructs an
+`allowed_signers` entry from each attestation's `identity` + `public_key` and verifies the
+signature in `signature_file`.
+
 ## Adding your attestation
 
 ```
-# Reproduce (against your own fully-synced node):
+# 1. Reproduce against your own fully-synced node:
 zebrad export-snapshot ./snap --cache-dir <your synced cache> --network <Network>
-# Confirm the printed "manifest hash" equals canonical_manifest_hash in the file, then:
+# Confirm the printed "manifest hash" equals canonical_manifest_hash in the file.
+
+# 2. Sign that hash with your key (use a long-term key whose public half is known):
+printf '%s' "<canonical_manifest_hash>" > hash.txt
+ssh-keygen -Y sign -f ~/.ssh/id_ed25519 -n zsnap-attestation hash.txt
+cp hash.txt.sig attestations/sigs/<network>-<height>.<you>.sig
+
+# 3. Add an [[attestation]] row (attester, identity, date, tool, manifest_hash,
+#    public_key, signature_file), then check it:
 ./attestations/verify.sh attestations/<network>-<height>.toml ./snap
-# Add an [[attestation]] row with your name, date, tool, the hash, and a signature.
 ```
+
+A hash is eligible to be blessed only once `verify.sh` reports at least `threshold` distinct
+signed attesters agreeing.
