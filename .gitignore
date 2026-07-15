@@ -4,3 +4,6 @@ info/
 # OS / editor cruft
 .DS_Store
 *.swp
+
+# overnight benchmark run output (lives outside the repo)
+/bench-ladder/
