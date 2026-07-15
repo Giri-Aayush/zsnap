@@ -49,15 +49,20 @@ same position Bitcoin's assumeutxo takes. See [architecture.md](architecture.md)
 - Verify the trusted hash out of band. zsnap authenticates the archive against that hash; it
   cannot vouch for where the hash came from.
 
-## Note on unverified mode
+## Unverified imports refuse by default
 
-With `--url` but no `--expect-hash`, the manifest is attacker-controlled, so its chunk
-sizes cannot be trusted as a disk bound on their own. This is now capped by the
-trust-independent limits above (2 TiB total, 4096 chunks), checked before anything
-downloads, so a hostile manifest can no longer declare a 10 TB chunk. A free-disk-space
-preflight against the (bounded) total is still worth adding so an honest but large
-snapshot fails fast on a too-small disk. Verified mode is unaffected either way: a forged
-manifest fails the hash check before any chunk is requested.
+If no `--expect-hash` is given and no trusted hash is embedded for the snapshot's network and
+height, the import is **refused**. Authentication is not something a hostile source can turn
+off by declaring an unlisted height: it must be explicitly waived with `--allow-unverified`,
+which is only for snapshots you produced yourself. The manifest's declared height is used
+only to look up the embedded hash; a lie about the height cannot produce a false match, and
+now cannot silently downgrade to no verification either.
+
+In an explicit `--allow-unverified` run the manifest is attacker-controlled, so its chunk
+sizes cannot bound the disk on their own. That case is capped by the trust-independent limits
+above (2 TiB total, 4096 chunks, and a checked sum that rejects an overflowing total) before
+anything downloads. A free-disk-space preflight is still worth adding so an honest but large
+snapshot fails fast on a too-small disk.
 
 ## Deliberately out of scope
 

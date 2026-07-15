@@ -6,6 +6,18 @@ All notable changes to zsnap are documented here. The format is based on
 
 ## [Unreleased]
 
+### Security
+- Import refuses by default when it cannot authenticate. Previously, if no `--expect-hash`
+  was given and no trusted hash was embedded for the snapshot's height, the import proceeded
+  unverified, so a hostile source could switch off authentication by declaring an unlisted
+  height. It now errors unless `--allow-unverified` is explicitly passed. Fixed on both the
+  import and download paths, with a checked total-size sum to reject an overflowing manifest.
+- Hardened the attestation verifier (`attestations/verify.sh`): the signature namespace is
+  fixed in the verifier instead of read from the attacker-editable file (domain separation),
+  the threshold counts distinct signing keys rather than attester names (Sybil resistance), a
+  claimed-but-broken signature is a hard failure, and "below threshold" exits non-zero so the
+  verifier fails closed when used as a gate.
+
 ### Added
 - In-tree checkpoint-style trusted-hash anchor (on the fork): trusted manifest hashes are
   embedded per network and height in `zebra-state/src/snapshot/*-snapshot-hashes.txt` and

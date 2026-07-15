@@ -67,8 +67,11 @@ The published identity of a snapshot is the **BLAKE2b-256 hash of the exact
 contains the hash of every chunk, verifying the one manifest hash transitively verifies
 the entire snapshot.
 
-Importers pass it as `--expect-hash <hex>`. Without it, the import is unauthenticated and
-zsnap says so loudly.
+Importers pass it as `--expect-hash <hex>`. If omitted, zsnap uses the hash embedded in the
+binary for the snapshot's network and height (like a block checkpoint). If there is no
+embedded hash for that height either, the import is **refused** unless `--allow-unverified`
+is given, so a hostile source cannot switch off authentication by declaring an unlisted
+height.
 
 ## Verification chain
 

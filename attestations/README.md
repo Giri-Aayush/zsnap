@@ -56,4 +56,9 @@ cp hash.txt.sig attestations/sigs/<network>-<height>.<you>.sig
 ```
 
 A hash is eligible to be blessed only once `verify.sh` reports at least `threshold` distinct
-signed attesters agreeing.
+signing **keys** agreeing (it counts keys, not names, so one party cannot pad the count with
+aliases). `verify.sh` proves N distinct valid signatures over the canonical hash in the fixed
+`zsnap-attestation` namespace; a human reviewer still confirms those keys belong to
+independent, known operators before the hash is added to the in-tree list. Exit codes: `0`
+threshold met, `2` valid but below threshold (so it fails closed when used as a gate), `1` a
+mismatch or broken signature.
