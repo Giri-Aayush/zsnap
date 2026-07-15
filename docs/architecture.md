@@ -92,3 +92,13 @@ Docker volumes) has no verification at all.
 **Consequences.** No separate validator to maintain (answers the #187 review). Determinism
 is testable and testable cheaply (see `crate::snapshot::tests`). The design reuses code and
 trust that Zebra and its reviewers already accept.
+
+**Where the trusted hash comes from.** The manifest hash is embedded in the binary per
+network and height, in `zebra-state/src/snapshot/*-snapshot-hashes.txt`, exactly like
+Zebra's hardcoded block checkpoints. An import without `--expect-hash` authenticates against
+that embedded value, so operators trust the reviewed, signed release rather than any single
+publisher. A review-gated CI workflow regenerates the list, and a value is only added after
+independent reproducible-hash attestations agree (see `attestations/`). Two further bindings
+close format drift: the manifest records the database format version and network (import
+refuses a mismatch), and import refuses any snapshot whose column-family set differs from the
+build's, so there is no parallel serializer that can silently diverge from the format.

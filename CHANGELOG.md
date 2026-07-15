@@ -7,6 +7,19 @@ All notable changes to zsnap are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- In-tree checkpoint-style trusted-hash anchor (on the fork): trusted manifest hashes are
+  embedded per network and height in `zebra-state/src/snapshot/*-snapshot-hashes.txt` and
+  used to authenticate an import when `--expect-hash` is omitted, exactly like Zebra trusts
+  hardcoded block checkpoints. A manifest that lies about its height cannot bypass this. A
+  review-gated CI workflow (`.github/workflows/snapshot-hashes.yml`) regenerates the list
+  and opens a do-not-merge-yet PR, so the trust root is the project's own governance.
+- Column-family-set binding: import refuses a snapshot whose column families differ from
+  `STATE_COLUMN_FAMILIES_IN_CODE`, so a snapshot from a different database format is rejected
+  rather than silently loaded. Values remain opaque `IntoDisk`/`FromDisk` bytes copied
+  verbatim, with no second serializer that could drift from the format version.
+- Reproducible-hash attestations ([attestations/](attestations/)): a format, a seed entry,
+  and a `verify.sh` that checks all attesters agree on the canonical hash, recomputes it
+  from a local snapshot, and reports whether the N-of-M threshold is met.
 - Phase 1a, resumable `--url` download in `import-snapshot` (on the Zebra fork): fetches
   the manifest first and authenticates it against `--expect-hash` before any chunk is
   requested, streams chunks to `.part` files with HTTP Range resume, verifies size and
