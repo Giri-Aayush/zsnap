@@ -19,7 +19,13 @@ All notable changes to zsnap are documented here. The format is based on
   verbatim, with no second serializer that could drift from the format version.
 - Reproducible-hash attestations ([attestations/](attestations/)): a format, a seed entry,
   and a `verify.sh` that checks all attesters agree on the canonical hash, recomputes it
-  from a local snapshot, and reports whether the N-of-M threshold is met.
+  from a local snapshot, and reports whether the N-of-M threshold is met. Attestations carry
+  real OpenSSH detached signatures (`ssh-keygen -Y`) over the canonical hash; only public
+  keys and signatures are committed.
+- CI cached-state dogfood ([docs/ci-cached-state.md](docs/ci-cached-state.md)): a workflow
+  on the fork (`ci-snapshot-cached-state.yml`) that bootstraps CI from a verified snapshot
+  import instead of an opaque, unverified GCP disk image, reusing the same state-version
+  keying. Delivers value to maintainers before any external adoption.
 - Phase 1a, resumable `--url` download in `import-snapshot` (on the Zebra fork): fetches
   the manifest first and authenticates it against `--expect-hash` before any chunk is
   requested, streams chunks to `.part` files with HTTP Range resume, verifies size and

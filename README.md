@@ -79,6 +79,8 @@ Ticked as we land them.
 - [x] Column-family-set binding: import refuses a snapshot whose column families differ
       from the build's, so it can never ride a parallel serializer that drifts from the format
 - [x] Reproducible-hash attestation format + verifier (N-of-M, checkpoint-grade trust)
+- [x] CI cached-state dogfood: workflow to bootstrap Zebra CI from a verified snapshot
+      instead of an opaque GCP disk image (design + workflow; see docs/ci-cached-state.md)
 - [ ] Published Storj bucket with a real snapshot (hosting, in coordination with zecrocks)
 - [ ] Mainnet snapshots + deterministic generation pipeline (CI-reproducible)
 - [ ] Incremental snapshots (base + delta)
@@ -94,6 +96,7 @@ Ticked as we land them.
 ```
 docs/architecture.md         Data-flow diagram and the trust-model ADR
 docs/distribution.md         Hosting/bandwidth answer (R2 + incremental + BitTorrent), ADR-002
+docs/ci-cached-state.md      Dogfooding zsnap as Zebra's verified CI cached state
 docs/security.md             Threat model of the import path
 docs/snapshot-format.md      The .zsnap wire format and verification chain
 docs/demo.md                 Storyboard for the side-by-side demo
