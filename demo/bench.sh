@@ -19,7 +19,7 @@
 set -euo pipefail
 
 ZEBRAD="${ZEBRAD:?set ZEBRAD to the zebrad binary path}"
-SRC_CACHE="${SRC_CACHE:?set SRC_CACHE to a synced node's state cache directory}"
+SRC_CACHE="${SRC_CACHE:?set SRC_CACHE to a synced node state cache directory}"
 NETWORK="${NETWORK:-Testnet}"
 WORK="${WORK:-./zsnap-bench}"
 MIN_FREE_GB="${MIN_FREE_GB:-3}"
