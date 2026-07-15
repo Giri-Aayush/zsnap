@@ -27,12 +27,38 @@ set -euo pipefail
 [ $# -ge 1 ] || { echo "usage: verify.sh <attestations.toml> [snapshot-dir] [--known-signers <file>]" >&2; exit 1; }
 
 python3 - "$@" <<'PY'
-import hashlib, os, subprocess, sys, tomllib, tempfile
+import hashlib, json, os, subprocess, sys, tomllib, tempfile
 
 # Fixed domain separation. The signature namespace is NOT read from the (attacker-editable)
 # attestation file: a signature only counts if it was made specifically for this namespace,
 # so a signature produced for some other ssh-signing purpose cannot be replayed here.
 NAMESPACE = "zsnap-attestation"
+
+# Column families excluded from the canonical hash (non-consensus, block-derived metadata).
+# Must match NON_CONSENSUS_COLUMN_FAMILIES in zebra-state/src/snapshot.rs.
+NON_CONSENSUS = {"block_info"}
+
+def canonical_hash_from_manifest(m):
+    """Recompute a snapshot's canonical hash from its MANIFEST.json.
+
+    This mirrors canonical_manifest_hash in zebra-state/src/snapshot.rs byte-for-byte: a
+    BLAKE2b-256 (personalization ZebraSnapshotV1) over a fixed text of the identity fields
+    plus the consensus chunk hashes (sorted by name, excluding NON_CONSENSUS)."""
+    import hashlib
+    lines = [
+        "zsnap-canonical-v2",
+        f"network={m['network']}",
+        f"tip_height={m['tip_height']}",
+        f"tip_hash={m['tip_hash']}",
+        f"db_format_version={m['db_format_version']}",
+        f"snapshot_format={m['snapshot_format']}",
+    ]
+    for c in sorted(m["chunks"], key=lambda c: c["name"]):
+        if c["name"] in NON_CONSENSUS:
+            continue
+        lines.append(f"chunk={c['name']},{c['records']},{c['bytes']},{c['blake2b256']}")
+    text = "\n".join(lines) + "\n"
+    return hashlib.blake2b(text.encode(), digest_size=32, person=b"ZebraSnapshotV1").hexdigest()
 
 def die(msg, code=1):
     print(f"RESULT: FAIL ({msg})")
@@ -160,9 +186,8 @@ if snap_dir:
     manifest = os.path.join(snap_dir, "MANIFEST.json")
     if not os.path.isfile(manifest):
         die(f"no MANIFEST.json in {snap_dir}")
-    recomputed = hashlib.blake2b(open(manifest, "rb").read(), digest_size=32,
-                                 person=b"ZebraSnapshotV1").hexdigest()
-    print(f"recomputed from {manifest}: {recomputed}")
+    recomputed = canonical_hash_from_manifest(json.load(open(manifest)))
+    print(f"recomputed canonical hash from {manifest}: {recomputed}")
     if recomputed != canon:
         die(f"local snapshot hashes to {recomputed}, not {canon}")
     print("local snapshot matches the canonical hash.")
