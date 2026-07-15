@@ -103,8 +103,10 @@ docs/demo.md                 Storyboard for the side-by-side demo
 benchmarks/testnet-268k.md   Measured head-to-head results
 benchmarks/robustness.md     Robustness matrix and export/import scaling
 benchmarks/testnet-brutal.md Statistical benchmark, checksummed results, reproduce-from-scratch
+benchmarks/differential-75600.md  Snapshot vs from-genesis sync: consensus state identical, block_info caveat
 demo/bench.sh                Reproducible benchmark + robustness runner
 demo/bench-brutal.sh         Statistical harness: distributions, throughput, checksummed JSON
+demo/differential.sh         Per-CF differential check between two independently-built caches
 attestations/                Reproducible-hash attestations + verifier (N-of-M trust)
 ```
 

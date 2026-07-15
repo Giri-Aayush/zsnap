@@ -20,9 +20,9 @@ import is 26 s, while a from-genesis sync to the same height is measured in hour
 
 ## Determinism (stated precisely)
 
-A snapshot is reproducible **at a fixed height**: two nodes at the same height produce an
-identical manifest hash, because export is a canonical, sorted, higher-level serialization
-(not a copy of RocksDB's physical files).
+Export is **deterministic for a fixed database**: re-exporting the same state reproduces the
+same hash, because export is a canonical, sorted, higher-level serialization (not a copy of
+RocksDB's physical files).
 
 Verified by the round trip: export from the source, import into a fresh database, then
 re-export that frozen database. The re-export hash matches the original.
@@ -31,9 +31,17 @@ re-export that frozen database. The re-export hash matches the original.
 PASS determinism (round trip): re-export hash matches
 ```
 
-What is *not* a determinism failure: re-exporting a live, still-syncing node twice gives two
-different hashes, because the tip advanced between exports. That is two different states, so
-two different hashes, exactly as expected. To reproduce a published hash, pin the height.
+Two important honesty notes:
+
+- Re-exporting a live, still-syncing node twice gives two different hashes, because the tip
+  advanced between exports. That is two different states, as expected. To reproduce a
+  published hash, pin the height.
+- Across two *independently built* nodes at the same height, the consensus-critical column
+  families are byte-identical, but the non-consensus `block_info` metadata can differ, so the
+  full manifest hash is not yet a canonical fingerprint of consensus state. This was found by
+  a differential test against a from-genesis sync and is documented, with the fix, in
+  [differential-75600.md](differential-75600.md). Until that fix lands, "reproducible hash"
+  means per-database, not across independent syncs.
 
 ## Robustness / edge cases
 

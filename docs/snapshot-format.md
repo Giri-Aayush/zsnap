@@ -27,8 +27,12 @@ record:  [u32-le key_len][key][u32-le value_len][value]     (repeated)
 
 - Keys and values are the raw RocksDB bytes for that column family - opaque blobs in
   Zebra's `IntoDisk`/`FromDisk` encoding. zsnap does not interpret them.
-- Sorted key order makes the byte stream **deterministic**: two nodes at the same height
-  produce identical chunk bytes, hence identical hashes.
+- Sorted key order makes each chunk's byte stream **deterministic for a fixed database**:
+  re-exporting the same state reproduces the same hash. Across two *independently built*
+  nodes at the same height, the consensus-critical column families are byte-identical, but
+  the non-consensus `block_info` metadata can differ, so the manifest hash is not yet a fully
+  canonical fingerprint of consensus state. See
+  [benchmarks/differential-75600.md](../benchmarks/differential-75600.md).
 - Sanity bounds on read: `key_len ≤ 16 MiB`, `value_len ≤ 256 MiB`.
 
 ## MANIFEST.json

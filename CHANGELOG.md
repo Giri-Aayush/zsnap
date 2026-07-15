@@ -21,6 +21,18 @@ All notable changes to zsnap are documented here. The format is based on
   Malformed attestation files (missing or non-string canonical hash) fail cleanly instead of
   raising a Python traceback. All three fixes came from a confirmatory adversarial review.
 
+### Changed
+- Corrected an over-stated determinism claim. A differential test against a from-genesis sync
+  ([benchmarks/differential-75600.md](benchmarks/differential-75600.md)) proved that a
+  snapshot-bootstrapped node and a pure from-genesis node at the same height agree byte-for-byte
+  on all 28 consensus-critical column families (UTXO set, all nullifier sets, note-commitment
+  and history trees, value pools, indexes), but differ in the one non-consensus metadata column
+  family `block_info`. So export is deterministic per database, and consensus state is
+  reproduced exactly, but the full manifest hash is not yet a canonical fingerprint across
+  independently-built nodes. Docs and the attestation model are updated to say so; the fix
+  (exclude `block_info` from the canonical hash) is the next work and will change the hash.
+- Added `demo/differential.sh` to run this check, and fixed its output-capture bug.
+
 ### Added
 - Brutal, reproducible benchmark ([demo/bench-brutal.sh](demo/bench-brutal.sh),
   [benchmarks/testnet-brutal.md](benchmarks/testnet-brutal.md)): captures the environment,
