@@ -7,6 +7,15 @@ All notable changes to zsnap are documented here. The format is based on
 ## [Unreleased]
 
 ### Added
+- Phase 1a, resumable `--url` download in `import-snapshot` (on the Zebra fork): fetches
+  the manifest first and authenticates it against `--expect-hash` before any chunk is
+  requested, streams chunks to `.part` files with HTTP Range resume, verifies size and
+  BLAKE2b hash before a chunk lands under its final name, and handles Range-less servers
+  by restarting the chunk. Reruns are idempotent. Seven download scenarios tested end to
+  end, including a resume-of-complete-partial edge case found by adversarial review and
+  fixed (an unsatisfiable Range request used to cost the whole chunk on a 416). See
+  [benchmarks/robustness.md](benchmarks/robustness.md) and
+  [docs/distribution.md](docs/distribution.md).
 - Architecture doc: a data-flow diagram of the export/import pipeline and ADR-001 recording
   the trust-model decision. See [docs/architecture.md](docs/architecture.md).
 - Reproducible benchmark + robustness runner ([demo/bench.sh](demo/bench.sh)) and results

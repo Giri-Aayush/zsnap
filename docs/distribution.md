@@ -123,8 +123,19 @@ This is the piece #187 was missing.
 
 ## Suggested phasing
 
-- **Phase 1a:** Storj hosting + resumable download (`--url`). Small, and it removes the cost
-  objection immediately. Coordinate with zecrocks, who already run this on Storj.
+- **Phase 1a: BUILT (prototype).** `import-snapshot --url <base>` downloads the snapshot
+  before importing: the manifest is fetched and authenticated against `--expect-hash`
+  before any chunk is requested, chunks stream to `.part` files and resume with HTTP Range
+  requests, and a chunk only lands under its final name after its size and BLAKE2b hash
+  match the manifest. Reruns are idempotent: verified chunks are skipped, partials resume,
+  corrupt ones are discarded and refetched. Works against any static host that serves the
+  snapshot directory layout (Storj S3 gateway or linkshare, R2, nginx); servers that
+  ignore Range are handled by restarting the affected chunk. Seven scenarios tested end to
+  end against a local server, including interrupted-then-resumed transfers and tampered
+  data; results in [../benchmarks/robustness.md](../benchmarks/robustness.md). Not yet
+  done: a published Storj bucket with a real mainnet-scale snapshot, which is hosting, not
+  code. Coordination with zecrocks (who already run Zcash snapshots on Storj) is the
+  natural next conversation.
 - **Phase 1b:** incremental snapshots (export delta, import base + delta).
 - **Phase 2:** BitTorrent distribution with a webseed + a snapshot-hash registry repo.
 - **Later:** native chunk serving over `zebra-network`, if the ecosystem wants it.

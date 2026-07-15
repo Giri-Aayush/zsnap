@@ -47,6 +47,15 @@ same position Bitcoin's assumeutxo takes. See [architecture.md](architecture.md)
 - Verify the trusted hash out of band. zsnap authenticates the archive against that hash; it
   cannot vouch for where the hash came from.
 
+## Known limitation of unverified mode
+
+With `--url` but no `--expect-hash`, the downloader's per-chunk disk bound comes from the
+manifest itself, which in that mode is attacker-controlled: a hostile server can declare
+huge chunks and fill the disk of an operator who chose to skip authentication. Verified
+mode does not have this problem, because a forged manifest fails the hash check before any
+chunk is requested. Planned hardening: a free-disk-space preflight against the manifest's
+total size before the first chunk downloads.
+
 ## Deliberately out of scope
 
 - Confidentiality of the snapshot. Chain state is public; snapshots are not secret.

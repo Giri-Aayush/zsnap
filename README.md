@@ -70,9 +70,12 @@ Ticked as we land them.
 - [ ] Full DB export -> import -> re-export integration test (verified manually on testnet; automated version parked on a genesis-only fixture limitation)
 - [ ] Demo video: snapshot sync vs full sync, side by side
 
-### Phase 1 - Hardening and mainnet (proposed)
+### Phase 1 - Hardening and mainnet (in progress)
+- [x] Resumable, verified `--url` download in `import-snapshot` (HTTP Range resume,
+      idempotent reruns, tamper rejection; works with any static host incl. Storj/R2)
+- [ ] Published Storj bucket with a real snapshot (hosting, in coordination with zecrocks)
 - [ ] Mainnet snapshots + deterministic generation pipeline (CI-reproducible)
-- [ ] Distribution infrastructure (R2/CDN, resume-capable downloads)
+- [ ] Incremental snapshots (base + delta)
 - [ ] Optional compression (LZ4 / Zstd)
 - [ ] Upstream discussion and PR to Zebra, per the project's contribution process
 

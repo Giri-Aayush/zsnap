@@ -62,3 +62,22 @@ Notes on why each holds:
 The framing and hashing that back these checks are also covered by fast unit tests in the
 Zebra fork (`crate::snapshot::tests`): frame round-trip, oversized/truncated frame rejection,
 hash determinism, and manifest tamper-evidence.
+
+## Download over HTTP (`--url`, Phase 1a)
+
+`import-snapshot --url <base>` downloads before importing. Tested end to end against a
+local HTTP server (testnet snapshot at height 75,200, 209 MB, 29 chunks):
+
+| Scenario | Expected | Result |
+|---|---|---|
+| Wrong `--expect-hash` | abort before any chunk is requested | PASS |
+| Full download + authenticated import | success, tip 75,200 | PASS |
+| Partial `.part` chunk from an interrupted run | resume via HTTP Range (server answers 206), complete | PASS |
+| Rerun over a completed download | all 29 chunks skipped as already verified, import succeeds | PASS |
+| Server serves a tampered chunk | chunk hash mismatch, corrupt data discarded | PASS |
+| Server ignores Range requests | affected chunk restarts from byte 0, still completes | PASS |
+| Crash left a full-size `.part` (interrupted during verify) | verified and renamed locally, zero network requests, no 416 | PASS |
+
+The last row started as a review finding: resuming a byte-complete partial used to send an
+unsatisfiable Range request, and the 416 response cost the whole chunk. Fixed by verifying
+full-size partials locally before touching the network.
