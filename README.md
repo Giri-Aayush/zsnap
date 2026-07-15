@@ -102,7 +102,9 @@ docs/snapshot-format.md      The .zsnap wire format and verification chain
 docs/demo.md                 Storyboard for the side-by-side demo
 benchmarks/testnet-268k.md   Measured head-to-head results
 benchmarks/robustness.md     Robustness matrix and export/import scaling
+benchmarks/testnet-brutal.md Statistical benchmark, checksummed results, reproduce-from-scratch
 demo/bench.sh                Reproducible benchmark + robustness runner
+demo/bench-brutal.sh         Statistical harness: distributions, throughput, checksummed JSON
 attestations/                Reproducible-hash attestations + verifier (N-of-M trust)
 ```
 

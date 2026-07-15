@@ -22,6 +22,15 @@ All notable changes to zsnap are documented here. The format is based on
   raising a Python traceback. All three fixes came from a confirmatory adversarial review.
 
 ### Added
+- Brutal, reproducible benchmark ([demo/bench-brutal.sh](demo/bench-brutal.sh),
+  [benchmarks/testnet-brutal.md](benchmarks/testnet-brutal.md)): captures the environment,
+  runs many iterations and reports full distributions (min/median/mean/p95/max/stddev), warm
+  vs cold cache, a determinism stress (N exports must produce 1 hash), and throughput for
+  honest extrapolation. Emits a checksummed `results.json` tied to the snapshot identity and
+  the binary's git commit, so a reader can verify the numbers were not hand-edited and can
+  reproduce them by importing the published snapshot (no multi-day sync needed). Measured at
+  testnet height 75,200: export median 1.06 s, import median 0.74 s, 0 failures, deterministic.
+  Includes an explicit accounting of where the "450x" headline holds and where it does not.
 - In-tree checkpoint-style trusted-hash anchor (on the fork): trusted manifest hashes are
   embedded per network and height in `zebra-state/src/snapshot/*-snapshot-hashes.txt` and
   used to authenticate an import when `--expect-hash` is omitted, exactly like Zebra trusts
