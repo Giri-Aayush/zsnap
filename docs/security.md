@@ -21,8 +21,10 @@ mitigation below is exercised by [`demo/bench.sh`](../demo/bench.sh).
 | Silent corruption | A flipped byte or a truncated chunk | Per-chunk BLAKE2b-256 check + frame-length bounds | tampered-chunk and truncated-chunk rejections |
 | Wrong-network state | Import a Testnet snapshot into a Mainnet node | Manifest records the network; importer refuses a mismatch | network-mismatch rejection |
 | Format confusion | Snapshot from an incompatible database format | Manifest records the format version; importer refuses a different major | code path checked on import |
-| Path traversal | Manifest chunk path like `../../etc/...` or an absolute path | `checked_chunk_path` rejects absolute paths and any `..` component | code path |
-| Resource exhaustion | A frame that declares a multi-gigabyte length | Length bounds (`MAX_KEY_LEN` 16 MiB, `MAX_VALUE_LEN` 256 MiB) checked before allocation | oversized-frame unit test |
+| Path traversal | Manifest chunk path like `../../etc/...`, an absolute path, or (Windows) a rooted/drive-prefixed path | Rejects absolute paths, `..`, root, and drive-prefix components, on both the download and import sides | path-traversal download test |
+| Resource exhaustion (frame) | A frame that declares a multi-gigabyte length | Length bounds (`MAX_KEY_LEN` 16 MiB, `MAX_VALUE_LEN` 256 MiB) checked before allocation | oversized-frame unit test |
+| Resource exhaustion (manifest) | A hostile manifest declaring a huge chunk or millions of chunks | Trust-independent caps on total bytes (2 TiB) and chunk count (4096), checked before any chunk downloads | oversized-manifest download test |
+| Stalled server | A server that connects then never replies | Bounded connect and response-header timeouts | code path |
 | Corrupting a running node | Import over a live node's cache | Refuses to write into an existing database | existing-DB rejection |
 
 ## The residual trust, stated honestly
@@ -47,14 +49,15 @@ same position Bitcoin's assumeutxo takes. See [architecture.md](architecture.md)
 - Verify the trusted hash out of band. zsnap authenticates the archive against that hash; it
   cannot vouch for where the hash came from.
 
-## Known limitation of unverified mode
+## Note on unverified mode
 
-With `--url` but no `--expect-hash`, the downloader's per-chunk disk bound comes from the
-manifest itself, which in that mode is attacker-controlled: a hostile server can declare
-huge chunks and fill the disk of an operator who chose to skip authentication. Verified
-mode does not have this problem, because a forged manifest fails the hash check before any
-chunk is requested. Planned hardening: a free-disk-space preflight against the manifest's
-total size before the first chunk downloads.
+With `--url` but no `--expect-hash`, the manifest is attacker-controlled, so its chunk
+sizes cannot be trusted as a disk bound on their own. This is now capped by the
+trust-independent limits above (2 TiB total, 4096 chunks), checked before anything
+downloads, so a hostile manifest can no longer declare a 10 TB chunk. A free-disk-space
+preflight against the (bounded) total is still worth adding so an honest but large
+snapshot fails fast on a too-small disk. Verified mode is unaffected either way: a forged
+manifest fails the hash check before any chunk is requested.
 
 ## Deliberately out of scope
 

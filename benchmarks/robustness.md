@@ -77,7 +77,14 @@ local HTTP server (testnet snapshot at height 75,200, 209 MB, 29 chunks):
 | Server serves a tampered chunk | chunk hash mismatch, corrupt data discarded | PASS |
 | Server ignores Range requests | affected chunk restarts from byte 0, still completes | PASS |
 | Crash left a full-size `.part` (interrupted during verify) | verified and renamed locally, zero network requests, no 416 | PASS |
+| Hostile manifest declares a >2 TiB chunk (unverified mode) | rejected before any chunk downloads | PASS |
+| Manifest chunk path uses `../` traversal | rejected as an invalid path | PASS |
 
-The last row started as a review finding: resuming a byte-complete partial used to send an
-unsatisfiable Range request, and the 416 response cost the whole chunk. Fixed by verifying
-full-size partials locally before touching the network.
+Three of these rows came out of an adversarial code review of the downloader:
+
+- Resuming a byte-complete `.part` used to send an unsatisfiable Range request, and the 416
+  response deleted the whole chunk. Fixed by verifying full-size partials locally first.
+- In unverified mode the per-chunk disk bound trusted the attacker's own manifest. Fixed
+  with trust-independent caps (2 TiB total, 4096 chunks) checked before downloading.
+- The path check missed Windows rooted/drive-prefixed paths. Fixed on both the download and
+  import sides.
