@@ -83,7 +83,8 @@ Ticked as we land them.
 - [x] Multi-height benchmark on testnet (25k to 1M, release build, distributions per height)
 - [x] Automated tests: chunk framing round-trip, hash determinism, manifest reproducibility + tamper-evidence
 - [x] Full DB export -> import -> re-export integration test (real on-disk RocksDB, runs in the normal test suite; see [snapshot_roundtrip.rs](https://github.com/Giri-Aayush/zebra/blob/feat/snapshot-sync/zebra-state/src/service/finalized_state/tests/snapshot_roundtrip.rs))
-- [ ] Demo video: snapshot sync vs full sync, side by side
+- [x] Explainer video (what / how / why), animated from the real numbers; [video/zsnap-explainer.mp4](video/zsnap-explainer.mp4)
+- [ ] Drop the real terminal captures (import, tamper-rejection) into the video's two labelled slots
 
 ### Phase 1 - Hardening and mainnet (in progress)
 - [x] Resumable, verified `--url` download in `import-snapshot` (HTTP Range resume,
@@ -125,6 +126,7 @@ demo/overnight-ladder.py     Multi-height ladder harness (drives the real binary
 demo/bench.sh                Reproducible benchmark + robustness runner
 demo/bench-brutal.sh         Statistical harness: distributions, throughput, checksummed JSON
 demo/differential.sh         Per-CF differential check between two independently-built caches
+video/                       Animated what/how/why explainer (Remotion source + rendered mp4)
 attestations/                Reproducible-hash attestations + verifier (N-of-M trust)
 ```
 
