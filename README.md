@@ -83,8 +83,8 @@ Ticked as we land them.
 - [x] Multi-height benchmark on testnet (25k to 1M, release build, distributions per height)
 - [x] Automated tests: chunk framing round-trip, hash determinism, manifest reproducibility + tamper-evidence
 - [x] Full DB export -> import -> re-export integration test (real on-disk RocksDB, runs in the normal test suite; see [snapshot_roundtrip.rs](https://github.com/Giri-Aayush/zebra/blob/feat/snapshot-sync/zebra-state/src/service/finalized_state/tests/snapshot_roundtrip.rs))
-- [x] Explainer video (what / how / why), animated from the real numbers; [video/zsnap-explainer.mp4](video/zsnap-explainer.mp4)
-- [ ] Drop the real terminal captures (import, tamper-rejection) into the video's two labelled slots
+- [x] Recordable demo ([demo/record-demo.sh](demo/record-demo.sh)): verified import in under a second, then a tampered snapshot refused
+- [ ] Publish a short screen-recorded demo (X post)
 
 ### Phase 1 - Hardening and mainnet (in progress)
 - [x] Resumable, verified `--url` download in `import-snapshot` (HTTP Range resume,
