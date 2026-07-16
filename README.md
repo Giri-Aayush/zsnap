@@ -45,16 +45,23 @@ shielded trees are verified *trustlessly* against the block header's
 
 ## Benchmarks
 
-Measured on an Apple M3 Pro, same machine, same testnet, same target height:
+Measured on an Apple M3 Pro, release build, testnet, across six heights in one
+run. Export and import scale with **state size**, not chain length; a full sync
+scales with chain length, so the gap widens with height. Each row is the median
+of several runs; full distributions and raw data are in the results file.
 
-| Method | Time to testnet height 268,000 |
-|---|---|
-| Full sync from genesis | **6,791 s** (1 h 53 m) |
-| zsnap snapshot (export + import) | **~15 s** |
-| **Speedup** | **~450x** |
+| Height | Snapshot | Export | Import | Sync from genesis | Restore vs sync |
+|---|---|---|---|---|---|
+| 100,000 | 279 MB | 1.4 s | 0.7 s | 14 min | ~1140x |
+| 500,000 | 1.36 GB | 6.9 s | 4.6 s | 68 min | ~890x |
+| 1,000,000 | 2.56 GB | 10.4 s | 11.7 s | 133 min | ~680x |
 
-Full methodology and honesty notes in [benchmarks/testnet-268k.md](benchmarks/testnet-268k.md).
-The snapshot binary is a debug build, so ~15 s is a floor.
+Determinism held at every height (repeated exports produce one identical hash).
+The speedup is a warm best-case: import is measured with a warm OS page cache
+(the realistic case right after a download), and sync time varies with network
+conditions. Full six-height table, distributions, checksummed raw data, and the
+honesty notes: [benchmarks/testnet-ladder.md](benchmarks/testnet-ladder.md).
+Reproduce with [demo/overnight-ladder.py](demo/overnight-ladder.py).
 
 ## Milestones
 
@@ -65,7 +72,7 @@ Ticked as we land them.
 - [x] `import-snapshot`: hash-authenticated, refuses to overwrite an existing DB
 - [x] Fresh-DB bootstrap + format-version handling
 - [x] Consensus check: tail-sync past the snapshot tip verifies the imported shielded trees
-- [x] Head-to-head benchmark on testnet (~450x at height 268,000)
+- [x] Multi-height benchmark on testnet (25k to 1M, release build, distributions per height)
 - [x] Automated tests: chunk framing round-trip, hash determinism, manifest reproducibility + tamper-evidence
 - [ ] Full DB export -> import -> re-export integration test (verified manually on testnet; automated version parked on a genesis-only fixture limitation)
 - [ ] Demo video: snapshot sync vs full sync, side by side
@@ -100,10 +107,12 @@ docs/ci-cached-state.md      Dogfooding zsnap as Zebra's verified CI cached stat
 docs/security.md             Threat model of the import path
 docs/snapshot-format.md      The .zsnap wire format and verification chain
 docs/demo.md                 Storyboard for the side-by-side demo
+benchmarks/testnet-ladder.md Multi-height ladder (25k to 1M): distributions + checksummed raw data
 benchmarks/testnet-268k.md   Measured head-to-head results
 benchmarks/robustness.md     Robustness matrix and export/import scaling
 benchmarks/testnet-brutal.md Statistical benchmark, checksummed results, reproduce-from-scratch
 benchmarks/differential-75600.md  Snapshot vs from-genesis sync: consensus state identical, block_info caveat
+demo/overnight-ladder.py     Multi-height ladder harness (drives the real binary, distributions)
 demo/bench.sh                Reproducible benchmark + robustness runner
 demo/bench-brutal.sh         Statistical harness: distributions, throughput, checksummed JSON
 demo/differential.sh         Per-CF differential check between two independently-built caches
