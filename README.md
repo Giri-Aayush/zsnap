@@ -82,7 +82,7 @@ Ticked as we land them.
 - [x] Consensus check: tail-sync past the snapshot tip verifies the imported shielded trees
 - [x] Multi-height benchmark on testnet (25k to 1M, release build, distributions per height)
 - [x] Automated tests: chunk framing round-trip, hash determinism, manifest reproducibility + tamper-evidence
-- [ ] Full DB export -> import -> re-export integration test (verified manually on testnet; automated version parked on a genesis-only fixture limitation)
+- [x] Full DB export -> import -> re-export integration test (real on-disk RocksDB, runs in the normal test suite; see [snapshot_roundtrip.rs](https://github.com/Giri-Aayush/zebra/blob/feat/snapshot-sync/zebra-state/src/service/finalized_state/tests/snapshot_roundtrip.rs))
 - [ ] Demo video: snapshot sync vs full sync, side by side
 
 ### Phase 1 - Hardening and mainnet (in progress)
@@ -128,7 +128,21 @@ demo/differential.sh         Per-CF differential check between two independently
 attestations/                Reproducible-hash attestations + verifier (N-of-M trust)
 ```
 
-The Zebra implementation itself lives on a fork and is not vendored here yet.
+## Where the code lives
+
+This repository is the design and evidence package: docs, benchmarks, harnesses,
+and attestations. The node code is not here because it belongs in Zebra. It lives
+on a Zebra fork, branch
+[`feat/snapshot-sync`](https://github.com/Giri-Aayush/zebra/tree/feat/snapshot-sync):
+
+- [`zebra-state/src/snapshot.rs`](https://github.com/Giri-Aayush/zebra/blob/feat/snapshot-sync/zebra-state/src/snapshot.rs) - snapshot format, canonical hash, export/import, verification, and unit tests.
+- [`zebrad/src/commands/export_snapshot.rs`](https://github.com/Giri-Aayush/zebra/blob/feat/snapshot-sync/zebrad/src/commands/export_snapshot.rs) - the `export-snapshot` subcommand.
+- [`zebrad/src/commands/import_snapshot.rs`](https://github.com/Giri-Aayush/zebra/blob/feat/snapshot-sync/zebrad/src/commands/import_snapshot.rs) - the `import-snapshot` subcommand (`--url`, `--expect-hash`, `--allow-unverified`).
+- [`zebrad/src/commands/snapshot_download.rs`](https://github.com/Giri-Aayush/zebra/blob/feat/snapshot-sync/zebrad/src/commands/snapshot_download.rs) - the resumable, verified HTTP download.
+- [`zebra-state/src/service/finalized_state/tests/snapshot_roundtrip.rs`](https://github.com/Giri-Aayush/zebra/blob/feat/snapshot-sync/zebra-state/src/service/finalized_state/tests/snapshot_roundtrip.rs) - the full export to import to re-export integration test.
+
+It is on a fork rather than upstreamed because Zebra's contribution rules require
+maintainer discussion before a PR. The commits are structured for that review.
 
 ## Related work
 
