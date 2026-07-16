@@ -1,0 +1,331 @@
+{
+  "environment": {
+    "kind": "environment",
+    "host": "Giri-MacBook-Pro.local",
+    "cpu": "Apple M3 Pro",
+    "cores": "11",
+    "ram_gb": 19.3,
+    "macos": "26.3.1",
+    "zebrad_version": "zebrad 6.0.0",
+    "zebra_git_commit": "2a5ae403e90c0ef4ea71cdf63bebcc025e0f8a81",
+    "network": "Testnet",
+    "ladder": [
+      25000,
+      100000,
+      250000,
+      500000,
+      750000,
+      1000000
+    ],
+    "n_export": 3,
+    "n_import": 5,
+    "build": "release",
+    "free_gb_start": 23.0,
+    "ts_unix": 1784152302.91579,
+    "note": "import measured warm (macOS purge needs sudo); continuous_sync_reference is the cache-insensitive baseline"
+  },
+  "continuous_sync_reference": {
+    "kind": "continuous_sync_reference",
+    "source": "/Users/aayushgiri/Desktop/zcash/node/zebrad.log",
+    "start_height": 75200,
+    "note": "single continuous zebrad run; elapsed measured from the run's first timestamped line. This run resumed at the start_height above (not genesis), so heights below it have no continuous reference.",
+    "elapsed_seconds_to_height": {
+      "100000": 182.5,
+      "250000": 1400.3,
+      "500000": 5476.2,
+      "750000": 13064.4,
+      "1000000": 15738.2
+    },
+    "ts_unix": 1784152302.954303
+  },
+  "rungs": [
+    {
+      "kind": "rung",
+      "height_target": 25000,
+      "height_actual": 25000,
+      "records": 308317,
+      "snapshot_bytes": 53601454,
+      "snapshot_gb": 0.054,
+      "canonical_hash": "8c478d0b63856cb36cac0902b90fd8cac4811261baeeea4c580cd5ec3c35acd8",
+      "determinism_ok": true,
+      "determinism_note": "N back-to-back exports on this machine produced one hash; cross-node reproducibility is proven separately",
+      "sync_seconds_this_rung": 227.65,
+      "sync_seconds_summed_across_rungs": 227.65,
+      "sync_summed_caveat": "sum of fresh per-rung syncs; counts node startup + peer discovery once per rung, so it OVER-states a continuous sync. Use continuous_sync_reference for the honest baseline.",
+      "export_seconds": {
+        "n": 3,
+        "min": 0.2895,
+        "median": 0.3223,
+        "mean": 0.3123,
+        "max": 0.325,
+        "stddev": 0.0198,
+        "samples": [
+          0.2895,
+          0.3223,
+          0.325
+        ]
+      },
+      "import_seconds": {
+        "n": 5,
+        "min": 0.1765,
+        "median": 0.1859,
+        "mean": 0.1854,
+        "max": 0.1931,
+        "stddev": 0.0059,
+        "samples": [
+          0.1765,
+          0.1848,
+          0.1859,
+          0.1866,
+          0.1931
+        ]
+      },
+      "import_cache_state": "warm",
+      "import_verification": "explicit --expect-hash",
+      "restore_vs_summedsync_speedup_warm_bestcase": 1224.6,
+      "free_gb_after": 23.0,
+      "ts_unix": 1784152532.501647,
+      "sync_seconds_from_genesis_this_run": 227.7
+    },
+    {
+      "kind": "rung",
+      "height_target": 100000,
+      "height_actual": 100000,
+      "records": 1570729,
+      "snapshot_bytes": 279056581,
+      "snapshot_gb": 0.279,
+      "canonical_hash": "fcd4ccaed25bce70f25960ad96984cec02995be81212701358341cef8eaeeda0",
+      "determinism_ok": true,
+      "determinism_note": "N back-to-back exports on this machine produced one hash; cross-node reproducibility is proven separately",
+      "sync_seconds_this_rung": 626.98,
+      "sync_seconds_summed_across_rungs": 854.63,
+      "sync_summed_caveat": "sum of fresh per-rung syncs; counts node startup + peer discovery once per rung, so it OVER-states a continuous sync. Use continuous_sync_reference for the honest baseline.",
+      "export_seconds": {
+        "n": 3,
+        "min": 1.3775,
+        "median": 1.4369,
+        "mean": 1.504,
+        "max": 1.6977,
+        "stddev": 0.1703,
+        "samples": [
+          1.3775,
+          1.4369,
+          1.6977
+        ]
+      },
+      "import_seconds": {
+        "n": 5,
+        "min": 0.6523,
+        "median": 0.7473,
+        "mean": 0.7503,
+        "max": 0.8574,
+        "stddev": 0.0737,
+        "samples": [
+          0.6523,
+          0.7294,
+          0.7473,
+          0.7652,
+          0.8574
+        ]
+      },
+      "import_cache_state": "warm",
+      "import_verification": "explicit --expect-hash",
+      "restore_vs_summedsync_speedup_warm_bestcase": 1143.7,
+      "free_gb_after": 22.6,
+      "ts_unix": 1784153167.980909,
+      "sync_seconds_from_genesis_this_run": 854.6
+    },
+    {
+      "kind": "rung",
+      "height_target": 250000,
+      "height_actual": 250000,
+      "records": 3950648,
+      "snapshot_bytes": 661924022,
+      "snapshot_gb": 0.662,
+      "canonical_hash": "6231365dacd496b720010b25f7396b24e220967bcca8373e9c568456cd57ea72",
+      "determinism_ok": true,
+      "determinism_note": "N back-to-back exports on this machine produced one hash; cross-node reproducibility is proven separately",
+      "sync_seconds_this_rung": 1238.15,
+      "sync_seconds_summed_across_rungs": 2092.78,
+      "sync_summed_caveat": "sum of fresh per-rung syncs; counts node startup + peer discovery once per rung, so it OVER-states a continuous sync. Use continuous_sync_reference for the honest baseline.",
+      "export_seconds": {
+        "n": 3,
+        "min": 3.6771,
+        "median": 4.1092,
+        "mean": 3.9816,
+        "max": 4.1585,
+        "stddev": 0.2649,
+        "samples": [
+          3.6771,
+          4.1092,
+          4.1585
+        ]
+      },
+      "import_seconds": {
+        "n": 5,
+        "min": 2.1898,
+        "median": 2.587,
+        "mean": 2.6572,
+        "max": 3.4486,
+        "stddev": 0.477,
+        "samples": [
+          2.1898,
+          2.4118,
+          2.587,
+          2.6488,
+          3.4486
+        ]
+      },
+      "import_cache_state": "warm",
+      "import_verification": "explicit --expect-hash",
+      "restore_vs_summedsync_speedup_warm_bestcase": 809.0,
+      "free_gb_after": 22.1,
+      "ts_unix": 1784154432.050648,
+      "sync_seconds_from_genesis_this_run": 2092.8
+    },
+    {
+      "kind": "rung",
+      "height_target": 500000,
+      "height_actual": 500000,
+      "records": 8182721,
+      "snapshot_bytes": 1357129588,
+      "snapshot_gb": 1.357,
+      "canonical_hash": "afe4bac4fc64ed4c95765f889eabb72d30ecb3e9293eae375aa0867436bebf2b",
+      "determinism_ok": true,
+      "determinism_note": "N back-to-back exports on this machine produced one hash; cross-node reproducibility is proven separately",
+      "sync_seconds_this_rung": 1956.6,
+      "sync_seconds_summed_across_rungs": 4049.38,
+      "sync_summed_caveat": "sum of fresh per-rung syncs; counts node startup + peer discovery once per rung, so it OVER-states a continuous sync. Use continuous_sync_reference for the honest baseline.",
+      "export_seconds": {
+        "n": 3,
+        "min": 6.6711,
+        "median": 6.9279,
+        "mean": 7.5444,
+        "max": 9.0343,
+        "stddev": 1.2966,
+        "samples": [
+          6.6711,
+          6.9279,
+          9.0343
+        ]
+      },
+      "import_seconds": {
+        "n": 5,
+        "min": 3.3787,
+        "median": 4.5549,
+        "mean": 4.707,
+        "max": 6.3061,
+        "stddev": 1.2483,
+        "samples": [
+          3.3787,
+          3.6778,
+          4.5549,
+          5.6177,
+          6.3061
+        ]
+      },
+      "import_cache_state": "warm",
+      "import_verification": "explicit --expect-hash",
+      "restore_vs_summedsync_speedup_warm_bestcase": 889.0,
+      "free_gb_after": 20.7,
+      "ts_unix": 1784156436.315504,
+      "sync_seconds_from_genesis_this_run": 4049.4
+    },
+    {
+      "kind": "rung",
+      "height_target": 750000,
+      "height_actual": 750000,
+      "records": 12139427,
+      "snapshot_bytes": 1960802651,
+      "snapshot_gb": 1.961,
+      "canonical_hash": "721f22df0ac143e60b808830ef50310a27f631613d9d03162f42ea1aeefe22d2",
+      "determinism_ok": true,
+      "determinism_note": "N back-to-back exports on this machine produced one hash; cross-node reproducibility is proven separately",
+      "sync_seconds_this_rung": 1960.37,
+      "sync_seconds_summed_across_rungs": 6009.75,
+      "sync_summed_caveat": "sum of fresh per-rung syncs; counts node startup + peer discovery once per rung, so it OVER-states a continuous sync. Use continuous_sync_reference for the honest baseline.",
+      "export_seconds": {
+        "n": 3,
+        "min": 8.148,
+        "median": 8.4429,
+        "mean": 8.7058,
+        "max": 9.5266,
+        "stddev": 0.7259,
+        "samples": [
+          8.148,
+          8.4429,
+          9.5266
+        ]
+      },
+      "import_seconds": {
+        "n": 5,
+        "min": 6.2913,
+        "median": 7.318,
+        "mean": 7.2335,
+        "max": 7.8245,
+        "stddev": 0.5966,
+        "samples": [
+          6.2913,
+          7.0988,
+          7.318,
+          7.6352,
+          7.8245
+        ]
+      },
+      "import_cache_state": "warm",
+      "import_verification": "explicit --expect-hash",
+      "restore_vs_summedsync_speedup_warm_bestcase": 821.2,
+      "free_gb_after": 19.1,
+      "ts_unix": 1784158462.368544,
+      "sync_seconds_from_genesis_this_run": 6009.8
+    },
+    {
+      "kind": "rung",
+      "height_target": 1000000,
+      "height_actual": 1000000,
+      "records": 16100452,
+      "snapshot_bytes": 2564434747,
+      "snapshot_gb": 2.564,
+      "canonical_hash": "c2815ded6c5f7189b87ddaba4a81738cf3ce253e25715f0890ee422440b3d0bb",
+      "determinism_ok": true,
+      "determinism_note": "N back-to-back exports on this machine produced one hash; cross-node reproducibility is proven separately",
+      "sync_seconds_this_rung": 1947.85,
+      "sync_seconds_summed_across_rungs": 7957.59,
+      "sync_summed_caveat": "sum of fresh per-rung syncs; counts node startup + peer discovery once per rung, so it OVER-states a continuous sync. Use continuous_sync_reference for the honest baseline.",
+      "export_seconds": {
+        "n": 3,
+        "min": 10.3005,
+        "median": 10.3647,
+        "mean": 10.8962,
+        "max": 12.0233,
+        "stddev": 0.9767,
+        "samples": [
+          10.3005,
+          10.3647,
+          12.0233
+        ]
+      },
+      "import_seconds": {
+        "n": 5,
+        "min": 7.972,
+        "median": 11.7288,
+        "mean": 13.9942,
+        "max": 23.7489,
+        "stddev": 6.7057,
+        "samples": [
+          7.972,
+          8.6653,
+          11.7288,
+          17.8561,
+          23.7489
+        ]
+      },
+      "import_cache_state": "warm",
+      "import_verification": "explicit --expect-hash",
+      "restore_vs_summedsync_speedup_warm_bestcase": 678.5,
+      "free_gb_after": 19.7,
+      "ts_unix": 1784160519.731167,
+      "sync_seconds_from_genesis_this_run": 7957.6
+    }
+  ]
+}
