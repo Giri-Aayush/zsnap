@@ -7,3 +7,7 @@ info/
 
 # overnight benchmark run output (lives outside the repo)
 /bench-ladder/
+
+# python bytecode
+__pycache__/
+*.pyc
