@@ -63,6 +63,14 @@ conditions. Full six-height table, distributions, checksummed raw data, and the
 honesty notes: [benchmarks/testnet-ladder.md](benchmarks/testnet-ladder.md).
 Reproduce with [demo/overnight-ladder.py](demo/overnight-ladder.py).
 
+**Mainnet (estimated, not yet measured):** extrapolating this throughput to
+mainnet's ~260 GB state, a verified import is roughly **15 to 40 minutes** versus
+a **14 to 16 hour** sync from genesis. The testnet multiple does not carry over:
+at mainnet scale the import takes real time and the download moves the same bytes
+either way, so the realistic win is ~2.5x on a home link up to ~20 to 60x from a
+local or fast source. Full method and caveats:
+[benchmarks/mainnet-estimate.md](benchmarks/mainnet-estimate.md).
+
 ## Milestones
 
 Ticked as we land them.
@@ -108,6 +116,7 @@ docs/security.md             Threat model of the import path
 docs/snapshot-format.md      The .zsnap wire format and verification chain
 docs/demo.md                 Storyboard for the side-by-side demo
 benchmarks/testnet-ladder.md Multi-height ladder (25k to 1M): distributions + checksummed raw data
+benchmarks/mainnet-estimate.md  Extrapolation to mainnet (~260 GB), clearly labelled as an estimate
 benchmarks/testnet-268k.md   Measured head-to-head results
 benchmarks/robustness.md     Robustness matrix and export/import scaling
 benchmarks/testnet-brutal.md Statistical benchmark, checksummed results, reproduce-from-scratch
