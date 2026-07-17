@@ -2,6 +2,11 @@
 
 **Fast, verifiable snapshot sync for [Zebra](https://github.com/ZcashFoundation/zebra). Bootstrap a fresh Zcash node from a hash-verified state snapshot in seconds, instead of replaying the chain from genesis.**
 
+![zsnap demo: a fresh node bootstrapped to testnet height 1,849,528 in one verified import](demo/zsnap-demo.gif)
+
+*One command, hash-verified, then Zebra validates every block after the snapshot as
+usual. Watch the [full-quality video](demo/zsnap-demo.mp4) (62 s).*
+
 `Status: Phase 0 prototype, testnet-validated` · `Network: Testnet` · `License: TBD`
 
 > Work in progress. This repository holds the design, benchmarks, and a working
