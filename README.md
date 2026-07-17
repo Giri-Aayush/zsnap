@@ -131,7 +131,7 @@ demo/overnight-ladder.py     Multi-height ladder harness (drives the real binary
 demo/bench.sh                Reproducible benchmark + robustness runner
 demo/bench-brutal.sh         Statistical harness: distributions, throughput, checksummed JSON
 demo/differential.sh         Per-CF differential check between two independently-built caches
-video/                       Animated what/how/why explainer (Remotion source + rendered mp4)
+demo/zsnap-demo.mp4          The 62 second demo film (screen recording, captioned)
 attestations/                Reproducible-hash attestations + verifier (N-of-M trust)
 ```
 
